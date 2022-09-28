@@ -28,6 +28,8 @@ Exercice : Le mot mystère
         public static List<char> LettresTrouvesv2 = new List<char>();
         public static string motmystere = "";
         public static string ready = "";
+        public static string name = "";
+        public static int vies = 0;
         public static void Main(string[] args)
         {
             Console.Title = "Le jeu du pendu";
@@ -42,7 +44,7 @@ Exercice : Le mot mystère
         {
             if(LettresMot.Count == LettresTrouvesv2.Count)
             {
-                Console.WriteLine("Waaaaaaaaaow vous avez gagné!!!!!! Vous avez trouvé le mot : " + motmystere);
+                Console.WriteLine("Waaaaaaaaaow vous avez gagné!!!!!! "+ name + "! Vous avez trouvé le mot : " + motmystere);
                 Console.WriteLine(); 
                 Console.WriteLine("Appuyez sur n'importe quelle touche pour recommencer, sinon appuyez sur n pour quitter \n");
 
@@ -50,7 +52,7 @@ Exercice : Le mot mystère
                 if (ready == "n")
                 {
                     Console.WriteLine("");
-                    Console.WriteLine("Good Bye Marylou");
+                    Console.WriteLine("Good Bye " + name);
                     Environment.Exit(0);
                 }
                 else
@@ -80,20 +82,102 @@ Exercice : Le mot mystère
         
         private static void Menu()
         {
-            Console.Clear();
-            Console.WriteLine("Bienvenue au jeu du pendu ! ");
-            Console.WriteLine("Le jeu consiste à deviner un mot en proposant des lettres.");
-            Console.WriteLine("Les règles sont simples\n");
-            Console.WriteLine("Vous avez 5 vies\n");
-            Console.WriteLine("Appuyez sur Escape pour quitter à tout moment\n");
 
-            Console.WriteLine("Appuyez sur n'importe quelle touche pour commencer, sinon appuyez sur n pour quitter \n");
+            var input = string.Empty;
 
-            ready = Console.ReadKey().Key.ToString().ToLower();
-            LettresTrouvesv2.Clear();
-            StartGame();
+            do
+            {
 
+                Console.WriteLine("Bienvenue au jeu du pendu ! ");
+                Console.WriteLine("Le jeu consiste à deviner un mot en proposant des lettres.");
+                Console.WriteLine("Les règles sont simples :\n");
+                Console.WriteLine("Vous avez un nombre de vies (5,10 ou 15 selon la difficulté)\n");
+                Console.WriteLine("Appuyez sur Escape pour quitter à tout moment\n");
+                Console.WriteLine();
+
+                Console.WriteLine("[1] Continuer");
+                Console.WriteLine("[2] Quitter?");
+                Console.WriteLine("");
+                Console.Write("Entrez un choix valide: ");
+
+                input = Console.ReadLine();
+
+                if (input == "1" || input == "2")
+                {
+
+                    if (input == "1")
+                    {
+                        Console.Write("Entrez votre nom : ");
+                        name = Console.ReadLine();
+                        Difficulté();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Goodbye !");
+                        Environment.Exit(0);
+                    }
+
+                    Console.WriteLine("");
+                    Console.Write("Press any key to exit... ");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    Console.Clear();
+                }
+            }
+            while (input != "1" && input != "2");
         }
+
+        private static void Difficulté()
+        {
+
+            var input = string.Empty;
+
+            do
+            {
+
+                Console.WriteLine("Choississez le niveau de difficulté ");
+                Console.WriteLine();
+
+                Console.WriteLine("[1] Facile(15 vies)");
+                Console.WriteLine("[2] Moyen (10 vies)");
+                Console.WriteLine("[3] Difficile (5 vies)");
+                Console.WriteLine("");
+                Console.Write("Entrez un choix valide: ");
+
+                input = Console.ReadLine();
+
+                if (input == "1" || input == "2" || input =="3")
+                {
+
+                    if (input == "1")
+                    {
+                        vies = 15;
+                        StartGame();
+                    }
+                    else if (input == "2")
+                    {
+                        vies = 10;
+                        StartGame();
+                    }
+                    else if (input =="3")
+                    {
+                        vies = 5;
+                        StartGame();
+                    }
+                    Console.WriteLine("");
+                    Console.Write("Press any key to exit... ");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    Console.Clear();
+                }
+            }
+            while (input != "1" && input != "2" && input != "3");
+        }
+
 
 
         private static void StartGame()
@@ -111,13 +195,13 @@ Exercice : Le mot mystère
 
             string motcache;
 
-            int vies = 0;
+
             //string trouve = "false";
             char lettre;
             if (ready == "n")
             {
                 Console.WriteLine("");
-                Console.WriteLine("Good Bye Marylou");
+                Console.WriteLine("Good Bye " + name);
                 Environment.Exit(0);
             }
 
@@ -145,7 +229,7 @@ Exercice : Le mot mystère
                 motcache = new string(charToSend, howManyTimes);
 
                 Console.WriteLine("le mot mystère est composé de " + motcache.Length + " caractères : " + motcache);
-                Console.WriteLine("Vous avez 5 vies");
+                Console.WriteLine("Vous avez " + vies +" vies");
 
 
                 do
@@ -168,7 +252,7 @@ Exercice : Le mot mystère
                         else
                         {
                             //Le joueur a trouvé une lettre
-                            Console.WriteLine("Vous avez trouvé la lettre  \"" + lettre + "\" Bravo !");
+                            Console.WriteLine("Vous avez trouvé la lettre  \"" + lettre + "\" Bravo " + name +" !");
                             foreach (char c in LettresMot)
                             {
                                 if (c == lettre)
@@ -185,14 +269,14 @@ Exercice : Le mot mystère
                     }
                     else
                     {
-                        vies++;
-                        Console.WriteLine("Vous avez perdu une vie, il vous reste : " + (5 - vies));
+                        vies--;
+                        Console.WriteLine("Vous avez perdu une vie, il vous reste : " + (vies));
                     }
 
 
-                } while (vies < 5 && lettre != Convert.ToChar(ConsoleKey.Escape));
+                } while (vies> 0 && lettre != Convert.ToChar(ConsoleKey.Escape));
                 Console.WriteLine("-----------------------------------------------------------------------------------------");
-                Console.WriteLine("Vous avez perdu, le mot mystère était :" + motmystere);
+                Console.WriteLine("Vous avez perdu, " + name + " le mot mystère était :" + motmystere);
                 Console.WriteLine();
                 Console.WriteLine("Appuyez sur n'importe quelle touche pour recommencer, sinon appuyez sur n pour quitter \n");
 
@@ -200,7 +284,7 @@ Exercice : Le mot mystère
                 if (ready == "n")
                 {
                     Console.WriteLine("");
-                    Console.WriteLine("Good Bye Marylou");
+                    Console.WriteLine("Good Bye " + name);
                     Environment.Exit(0);
                 }
                 else
