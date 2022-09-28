@@ -8,6 +8,8 @@ Exercice : Le mot mystère
 4)  Le joueur dispose de x tentatives pour trouver le mot mystère
 5)  A chaque tentative, le joueur propose une lettre afin de trouver le mot mystère
 6)  Le jeu s'arrête lorsque le joueur :
+
+
         a) A trouvé le mot mystère => c'est gagné
         b) A épuisé toutes ses chances "chances"
         c) Décide de quitter le jeu en appuyant sur la touche "echap" du clavier.
