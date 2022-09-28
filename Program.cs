@@ -76,9 +76,10 @@ Exercice : Le mot mystère
         public static void DisplayWord()
         {
 
-            Console.WriteLine("Le mot à trouver : ");
+            Console.WriteLine(" Le mot à trouver : ");
             Console.ForegroundColor
 = ConsoleColor.Yellow;
+            Console.Write("    ");
             foreach (char car in LettresMot)
 
             {
@@ -101,9 +102,15 @@ Exercice : Le mot mystère
 
             do
             {
+
+                Console.Clear();
+                LettresTrouvesv2.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("---------------------------------");
+                Console.WriteLine("|  Bienvenue au jeu du pendu !! | ");
+                Console.WriteLine("---------------------------------\n");
                 Console.ForegroundColor
     = ConsoleColor.Cyan;
-                Console.WriteLine("Bienvenue au jeu du pendu ! ");
                 Console.WriteLine("Le jeu consiste à deviner un mot en proposant des lettres.");
                 Console.WriteLine("Les règles sont simples :\n");
                 Console.WriteLine("Vous avez un nombre de vies (5,10 ou 15 selon la difficulté)\n");
@@ -121,20 +128,22 @@ Exercice : Le mot mystère
                 Console.WriteLine("");
                 Console.Write("Entrez un choix valide: ");
 
-                input = Console.ReadLine();
+                input = Console.ReadKey().KeyChar.ToString();
 
                 if (input == "1" || input == "2")
                 {
 
                     if (input == "1")
                     {
+                        Console.WriteLine();
                         Console.Write("Entrez votre nom : ");
                         name = Console.ReadLine();
                         Difficulté();
                     }
                     else
                     {
-                        Console.WriteLine("Goodbye !");
+                        Console.WriteLine();
+                        Console.WriteLine("Goodbye " + name);
                         Environment.Exit(0);
                     }
 
@@ -171,8 +180,8 @@ Exercice : Le mot mystère
     = ConsoleColor.White;
                 Console.WriteLine("");
                 Console.Write("Entrez un choix valide: ");
-
-                input = Console.ReadLine();
+                
+                input = Console.ReadKey().KeyChar.ToString();
 
                 if (input == "1" || input == "2" || input =="3")
                 {
@@ -222,7 +231,7 @@ Exercice : Le mot mystère
             string motcache;
 
 
-            //string trouve = "false";
+
             char lettre;
             if (ready == "n")
             {
@@ -254,8 +263,8 @@ Exercice : Le mot mystère
                 Char charToSend = '_';
                 motcache = new string(charToSend, howManyTimes);
 
-                Console.WriteLine("le mot mystère est composé de " + motcache.Length + " caractères : " + motcache);
-                Console.WriteLine("Vous avez " + vies +" vies");
+                Console.WriteLine(" Le mot mystère est composé de " + motcache.Length + " caractères : " + motcache);
+                Console.WriteLine(" Vous avez " + vies +" vies");
 
 
                 do
@@ -264,10 +273,11 @@ Exercice : Le mot mystère
                     VerifierReponse();
                     DisplayWord();
                     Console.WriteLine();
-                    Console.WriteLine("Entrez une lettre");
+                    Console.WriteLine(' ');
+                    Console.WriteLine("Veuillez entrer une lettre");
                     lettre = Console.ReadKey().KeyChar;
                     Console.WriteLine("");
-
+                    
 
                     if (motmystere.Contains(lettre))
                     {
