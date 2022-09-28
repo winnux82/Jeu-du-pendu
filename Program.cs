@@ -44,8 +44,18 @@ Exercice : Le mot mystère
         {
             if(LettresMot.Count == LettresTrouvesv2.Count)
             {
-                Console.WriteLine("Waaaaaaaaaow vous avez gagné!!!!!! "+ name + "! Vous avez trouvé le mot : " + motmystere);
-                Console.WriteLine(); 
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(@"
+#####################################################
+#                                                   #
+#     Waaaaaaaaaaaaaaaaow Vous avez trouvé!!!       #
+#                                                   #
+#####################################################
+");
+
+        Console.WriteLine("Bravo "+ name + "! Vous avez trouvé le mot : " + motmystere);
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("Appuyez sur n'importe quelle touche pour recommencer, sinon appuyez sur n pour quitter \n");
 
                 ready = Console.ReadKey().Key.ToString().ToLower();
@@ -65,7 +75,10 @@ Exercice : Le mot mystère
 
         public static void DisplayWord()
         {
+
             Console.WriteLine("Le mot à trouver : ");
+            Console.ForegroundColor
+= ConsoleColor.Yellow;
             foreach (char car in LettresMot)
 
             {
@@ -78,6 +91,7 @@ Exercice : Le mot mystère
                         Console.Write("_");
                     }
             }
+            Console.ForegroundColor = ConsoleColor.White;
         }
         
         private static void Menu()
@@ -87,16 +101,23 @@ Exercice : Le mot mystère
 
             do
             {
-
+                Console.ForegroundColor
+    = ConsoleColor.Cyan;
                 Console.WriteLine("Bienvenue au jeu du pendu ! ");
                 Console.WriteLine("Le jeu consiste à deviner un mot en proposant des lettres.");
                 Console.WriteLine("Les règles sont simples :\n");
                 Console.WriteLine("Vous avez un nombre de vies (5,10 ou 15 selon la difficulté)\n");
                 Console.WriteLine("Appuyez sur Escape pour quitter à tout moment\n");
+                Console.ForegroundColor
+    = ConsoleColor.White;
                 Console.WriteLine();
-
-                Console.WriteLine("[1] Continuer");
-                Console.WriteLine("[2] Quitter?");
+                Console.ForegroundColor    = ConsoleColor.Blue;
+                Console.WriteLine(
+                    @"Menu
+                    [1] Continuer
+                    [2] Quitter?");
+                Console.ForegroundColor
+    = ConsoleColor.White;
                 Console.WriteLine("");
                 Console.Write("Entrez un choix valide: ");
 
@@ -136,13 +157,18 @@ Exercice : Le mot mystère
 
             do
             {
-
+                Console.WriteLine();
                 Console.WriteLine("Choississez le niveau de difficulté ");
                 Console.WriteLine();
-
-                Console.WriteLine("[1] Facile(15 vies)");
-                Console.WriteLine("[2] Moyen (10 vies)");
-                Console.WriteLine("[3] Difficile (5 vies)");
+                Console.ForegroundColor
+    = ConsoleColor.Blue;
+                Console.WriteLine(
+                @"
+                [1] Facile(15 vies)
+                [2] Moyen (10 vies)
+                [3] Difficile (5 vies)");
+                Console.ForegroundColor
+    = ConsoleColor.White;
                 Console.WriteLine("");
                 Console.Write("Entrez un choix valide: ");
 
@@ -247,12 +273,20 @@ Exercice : Le mot mystère
                     {
                         if (LettresTrouvesv2.Contains(lettre))
                         {
+                            Console.ForegroundColor
+    = ConsoleColor.Red;
                             Console.WriteLine("Vous avez déjà entrer cette lettre !");
+                            Console.ForegroundColor
+    = ConsoleColor.White;
                         }
                         else
                         {
                             //Le joueur a trouvé une lettre
+                            Console.ForegroundColor
+    = ConsoleColor.Green;
                             Console.WriteLine("Vous avez trouvé la lettre  \"" + lettre + "\" Bravo " + name +" !");
+                            Console.ForegroundColor
+    = ConsoleColor.White;
                             foreach (char c in LettresMot)
                             {
                                 if (c == lettre)
@@ -276,7 +310,7 @@ Exercice : Le mot mystère
 
                 } while (vies> 0 && lettre != Convert.ToChar(ConsoleKey.Escape));
                 Console.WriteLine("-----------------------------------------------------------------------------------------");
-                Console.WriteLine("Vous avez perdu, " + name + " le mot mystère était :" + motmystere);
+                Console.WriteLine("Vous avez perdu, " + name + ", le mot mystère était :" + motmystere);
                 Console.WriteLine();
                 Console.WriteLine("Appuyez sur n'importe quelle touche pour recommencer, sinon appuyez sur n pour quitter \n");
 
