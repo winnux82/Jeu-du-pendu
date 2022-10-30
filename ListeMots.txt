@@ -1,8 +1,7 @@
 ﻿java
 internet
 data
-réseau
-adhésif
-cadeau
-porte
-clef
+language
+csharp
+php
+explorer

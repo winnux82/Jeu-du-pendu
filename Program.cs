@@ -1,40 +1,189 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Jeu_Pendu
+namespace Jeu_du_pendu
 {
+/*Règles
+
+Exercice : Le mot mystère
+
+1)  L'ordinateur joue contre l'utilisateur
+2)  L'ordinateur demande au joueur de choisir une lettre afin de deviner un mot de x lettres
+3)  Le mot proposé est sélectionné parmi une liste au hasard
+4)  Le joueur dispose de x tentatives pour trouver le mot mystère
+5)  A chaque tentative, le joueur propose une lettre afin de trouver le mot mystère
+6)  Le jeu s'arrête lorsque le joueur :
+        a) A trouvé le mot mystère => c'est gagné
+        b) A épuisé toutes ses chances "chances"
+        c) Décide de quitter le jeu en appuyant sur la touche "echap" du clavier.
+*/
     public class Program
     {
+        public static List<string> ListeDeMots = new List<string>();
         public static List<char> LettresMot = new List<char>();
         public static List<char> LettresTrouvesv2 = new List<char>();
-
+        //public static string path = Path.Combine(Directory.GetCurrentDirectory(), "ListeMots.txt");
+        //public static List<string> ListeMots = System.IO.File.ReadLines(path).ToList();
+        public static string NewMot = "";
+        public static string motmystere = "";
+        public static string ready = "";
+        public static string name = "";
+        public static int vies = 0;
         public static void Main(string[] args)
         {
+            Console.Title = "Le jeu du pendu";
+            //Console.BackgroundColor = ConsoleColor.Blue;
+            Menu();
+        }
+        private static void Menu()
+        {
+            var input = string.Empty;
+            do
+            {
 
+                Console.Clear();
+                LettresTrouvesv2.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("---------------------------------");
+                Console.WriteLine("|  Bienvenue au jeu du pendu !! | ");
+                Console.WriteLine("---------------------------------\n");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("Le jeu consiste à deviner un mot en proposant des lettres.");
+                Console.WriteLine("Les règles sont simples :\n");
+                Console.WriteLine("Vous avez un nombre de vies (5,10 ou 15 selon la difficulté)\n");
+                Console.WriteLine("Appuyez sur Escape pour quitter à tout moment\n");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine(
+                    @"Menu
+                    [1] Continuer
+                    [2] Quitter?
+                    [3] Ajouter un mot");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("");
+                Console.Write("Entrez un choix valide: ");
 
+                input = Console.ReadKey().KeyChar.ToString();
 
-            /*Règles
+                if (input == "1" || input == "2" || input == "3")
+                {
 
-            Exercice : Le mot mystère
+                    if (input == "1")
+                    {
+                        Console.WriteLine();
+                        Console.Write("Entrez votre nom : ");
+                        name = Console.ReadLine();
+                        Difficulté();
+                    }
+                    else if(input == "2")
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Goodbye " + name);
+                        Environment.Exit(0);
+                    }
+                    else if(input=="3")
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("\nQuel mot voulez vous ajouter à la liste??");
 
-            1)  L'ordinateur joue contre l'utilisateur
-            2)  L'ordinateur demande au joueur de choisir une lettre afin de deviner un mot de x lettres
-            3)  Le mot proposé est sélectionné parmi une liste au hasard
-            4)  Le joueur dispose de x tentatives pour trouver le mot mystère
-            5)  A chaque tentative, le joueur propose une lettre afin de trouver le mot mystère
-            6)  Le jeu s'arrête lorsque le joueur :
-                    a) A trouvé le mot mystère => c'est gagné
-                    b) A épuisé toutes ses chances "chances"
-                    c) Décide de quitter le jeu en appuyant sur la touche "echap" du clavier.
+                        AjouterMot(Console.ReadLine());
 
+                    }
 
+                    Console.WriteLine("");
+                    Console.Write("Press any key to exit... ");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    Console.Clear();
+                }
+            }
+            while (input != "1" && input != "2" && input !="3");
+        }
+        private static void Difficulté()
+        {
+            var input = string.Empty;
+            do
+            {
+                Console.WriteLine();
+                Console.WriteLine("Choississez le niveau de difficulté ");
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine(
+                @"
+                [1] Facile(15 vies)
+                [2] Moyen (10 vies)
+                [3] Difficile (5 vies)");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("");
+                Console.Write("Entrez un choix valide: ");
 
-            */
+                input = Console.ReadKey().KeyChar.ToString();
 
+                if (input == "1" || input == "2" || input == "3")
+                {
 
+                    if (input == "1")
+                    {
+                        vies = 15;
+                        StartGame();
+                    }
+                    else if (input == "2")
+                    {
+                        vies = 10;
+                        StartGame();
+                    }
+                    else if (input == "3")
+                    {
+                        vies = 5;
+                        StartGame();
+                    }
+                    Console.WriteLine("");
+                    Console.Write("Press any key to exit... ");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    Console.Clear();
+                }
+            }
+            while (input != "1" && input != "2" && input != "3");
+        }
+        private static void StartGame()
+        {
+            //Charger la liste des mots
+            
+            string filePath = Environment.CurrentDirectory+"\\ListeMots.txt";
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("\nFile does not exist : {0} ", filePath);
 
+                //Création du fichier s'il n'existe pas
+                File.Create(filePath).Close();
 
+                //On ajoute quelques mots
+                File.AppendAllText(filePath, "programmation" + Environment.NewLine);
+                File.AppendAllText(filePath, "java" + Environment.NewLine);
+                File.AppendAllText(filePath, "internet" + Environment.NewLine);
+                File.AppendAllText(filePath, "data" + Environment.NewLine);
+                File.AppendAllText(filePath, "language" + Environment.NewLine);
+                File.AppendAllText(filePath, "csharp" + Environment.NewLine);
+                Console.WriteLine("Création du fichier par défaut. Appuyez sur une touche pour retourner au menu");
+                Console.ReadKey();
+                Menu();
+            }
+
+            string[] ListeMotsTxT = File.ReadAllLines(filePath);
+            Console.WriteLine();
+            foreach (string line in ListeMotsTxT)
+            {
+                ListeDeMots.Add(line);
+            }
+            /*
             string[] listing = new string[6];
 
             listing[0] = "java";
@@ -43,92 +192,38 @@ namespace Jeu_Pendu
             listing[3] = "language";
             listing[4] = "csharp";
             listing[5] = "php";
-
-            var rand = new Random();
-            string motmystere;
-            string motcache;
-            var ready = "";
-            int vies = 0;
-            //string trouve = "false";
-            char lettre;
-
-
-
-            //char[] LettresTrouves = new char[motmystere.Length];
-
-
-
-            /*
-            if (BeginGame())
-            {
-                //startgame();
-
-                do
-                {
-                    Console.WriteLine("\n ________\n");
-                    Console.WriteLine("Merci de proposer une lettre: ");
-
-                    lettre = Console.ReadKey().KeyChar;
-                    Console.WriteLine();
-
-
-                } while (lettre != Convert.ToChar(ConsoleKey.Escape) && !FoundWord()) && nbTentative > 0);
-            }
-
             */
+            var rand = new Random();
 
-
-            Console.Title = "Le jeu du pendu";
-            //Console.BackgroundColor = ConsoleColor.Blue;
-
-            Console.WriteLine("Bienvenue au jeu du pendu ! ");
-            Console.WriteLine("Le jeu consiste à deviner un mot en proposant des lettres.");
-            Console.WriteLine("Les règles sont simples\n");
-            Console.WriteLine("Vous avez 5 vies\n");
-            Console.WriteLine("Appuyez sur Escape pour quitter à tout moment\n");
-
-            Console.WriteLine("Êtes-vous prêt ?  (o/n) \n");
-
-            ready = Console.ReadKey().Key.ToString().ToLower();
-            
-
-            StartGame();
-            try
+            string motcache;
+            Console.WriteLine();
+            Console.WriteLine("Voici la liste des mots: ");
+            foreach(string line in ListeMotsTxT)
             {
-                if (ready == "o")
-                {
-                    Console.WriteLine("c'est parti");
-                }
-
-                else if (ready == "n")
-                {
-                    Console.WriteLine("Good Bye Marylou");
-                    Environment.Exit(0);
-
-                }
-                else
-                { Console.WriteLine("Entrez o ou n"); }
-                
+                Console.WriteLine(line);
             }
-            catch
+            char lettre;
+            if (ready == "n")
             {
-                Console.WriteLine("Erreur");
+                Console.WriteLine("");
+                Console.WriteLine("Good Bye " + name);
+                Environment.Exit(0);
             }
-
-            if (ready != "n")
+            else
             {
-
+                Console.WriteLine();
                 //On choisi un des mots du tableau
-                motmystere = listing[rand.Next(listing.Length)];
-                Console.WriteLine("Le mot mystère à trouver est :" + motmystere);
-                
+                motmystere = "";
+                motmystere = ListeDeMots[rand.Next(ListeDeMots.Count)];
+                LettresMot.Clear();
+                //Console.WriteLine("Le mot mystère à trouver est :" + motmystere);
+
                 //on ajoute chaque lettre dans une liste
-                for(int i = 0; i < motmystere.Length; i++)
-                {   
+                for (int i = 0; i < motmystere.Length; i++)
+                {
                     LettresMot.Add(motmystere[i]);
                 }
-
-
+                
                 Console.WriteLine("-----------------------------------------------------------------------------------------");
 
                 //Cacher le mot
@@ -136,108 +231,134 @@ namespace Jeu_Pendu
                 Char charToSend = '_';
                 motcache = new string(charToSend, howManyTimes);
 
-                Console.WriteLine("le mot caché est : " + motcache);
-                Console.WriteLine("Vous avez 5 vies");
-
+                Console.WriteLine(" Le mot mystère est composé de " + motcache.Length + " caractères : " + motcache);
+                Console.WriteLine(" Vous avez " + vies + " vies");
 
                 do
-                {
+                {   
 
                     VerifierReponse();
                     DisplayWord();
                     Console.WriteLine();
-                    Console.WriteLine("Entrez une lettre");
+                    Console.WriteLine(' ');
+                    Console.WriteLine("Veuillez entrer une lettre");
                     lettre = Console.ReadKey().KeyChar;
                     Console.WriteLine("");
-
 
                     if (motmystere.Contains(lettre))
                     {
                         if (LettresTrouvesv2.Contains(lettre))
                         {
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Vous avez déjà entrer cette lettre !");
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
                         else
                         {
                             //Le joueur a trouvé une lettre
-                            Console.WriteLine("Vous avez trouvé la lettre  \"" + lettre + "\" Bravo !");
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Bravo " + name + " ! Vous avez trouvé la lettre  \"" + lettre + "\"" );
+                            Console.ForegroundColor = ConsoleColor.White;
                             foreach (char c in LettresMot)
                             {
-                                if(c == lettre)
+                                if (c == lettre)
                                 {
                                     LettresTrouvesv2.Add(lettre);
                                 }
-                            }    
-                            
+                            }
+
                             Console.WriteLine("-----------------------------------------------------------------------------------------");
 
                         }
-
-
                     }
                     else
                     {
-                        vies++;
-                        Console.WriteLine("Vous avez perdu une vie, il vous reste : " + (5 - vies));
+                        vies--;
+                        Console.WriteLine("Vous avez perdu une vie, il vous en reste : " + (vies));
                     }
 
 
-                    //trouve = "false";
-
-                } while (vies < 5 && lettre != Convert.ToChar(ConsoleKey.Escape));
+                } while (vies > 0 && lettre != Convert.ToChar(ConsoleKey.Escape));
                 Console.WriteLine("-----------------------------------------------------------------------------------------");
-                Console.WriteLine("Vous avez perdu, le mot mystère était :" + motmystere );
+                Console.WriteLine("Vous avez perdu, " + name + ", le mot mystère était :" + motmystere);
+                Console.WriteLine();
+                Console.WriteLine("Appuyez sur n'importe quelle touche pour recommencer, sinon appuyez sur n pour quitter \n");
+
+                ready = Console.ReadKey().Key.ToString().ToLower();
+                if (ready == "n")
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("Good Bye " + name);
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    Menu();
+                }
             }
-        }
 
-        public static bool FoundWord()
+        }
+        public static void AjouterMot(string NewMot)
         {
-            return FoundWord();
+            string filePath = Environment.CurrentDirectory + "\\ListeMots.txt";
+            File.AppendAllText(filePath, NewMot.ToLower() + Environment.NewLine);
+            Console.WriteLine("\nLe mot \"" + NewMot.ToLower() + "\" a été ajouté avec succès à la liste! \nAppuyez sur une touche pour retourner au Menu");
+            Console.ReadKey();
+            Menu();
         }
-
         public static void VerifierReponse()
         {
-            Console.WriteLine("Vérifiation en cours");
             if(LettresMot.Count == LettresTrouvesv2.Count)
             {
-                Console.WriteLine("Putain de merde tas gagné");
-                Environment.Exit(0);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(@"
+#####################################################
+#                                                   #
+#     Waaaaaaaaaaaaaaaaow Vous avez trouvé!!!       #
+#                                                   #
+#####################################################
+");
 
+        Console.WriteLine("Bravo "+ name + "! Vous avez trouvé le mot : " + motmystere);
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Appuyez sur n'importe quelle touche pour recommencer, sinon appuyez sur n pour quitter \n");
+
+                ready = Console.ReadKey().Key.ToString().ToLower();
+                if (ready == "n")
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("Good Bye " + name);
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    Menu();
+                }
 
             }
         }
-
         public static void DisplayWord()
         {
-
+            Console.WriteLine(" Le mot à trouver : ");
+            Console.ForegroundColor= ConsoleColor.Yellow;
+            Console.Write("    ");
             foreach (char car in LettresMot)
 
             {
                     if (LettresTrouvesv2.Contains(car))
                     {
-                        Console.Write(car);
+                        Console.Write(car+ " ");
                     }
                     else
                     {
-                        Console.Write("_");
+                        Console.Write("_ ");
                     }
             }
-        }
-        
-        private static void StartGame()
-        {
-            throw new Exception();
-        }
-
-        private static void EndGame()
-        {
-            Console.WriteLine("Vous avez gagné !!");
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }
-
-
-//while (lettre != Convert.ToChar(ConsoleKey.Escape) &&  !FoundWord()) && nbTentative>0);
 
 
 
